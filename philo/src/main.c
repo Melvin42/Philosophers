@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2021/12/18 15:57:44 by melperri         ###   ########.fr       */
+/*   Updated: 2021/12/18 17:40:05 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,7 @@ static int	ft_create_thread(t_thread_info **philo, t_env *g)
 	while (++tnum < g->philo_nbr)
 	{
 		if (pthread_join((*philo)[tnum].thread_id, NULL))
-			return (-1);
-//			return (ft_free_all(&philo));
+			return (ft_free_all(philo));
 	}
 	return (0);
 }
@@ -103,15 +102,12 @@ int	main(int ac, char **av)
 {
 	t_env			g;
 	t_thread_info	*philo;
-//	pthread_mutex_t	*mutex;
 
 	if (ac < 5 || ac > 6)
 		return (write(1, ARG_ERROR, sizeof(ARG_ERROR)));
-//	mutex = NULL;
 	ft_get_args(av, &g);
 	if (ft_create_thread(&philo, &g))
 		return (-1);
-//	pthread_mutex_init(mutex, NULL);
 	ft_free_all(&philo);
 	return (0);
 }
