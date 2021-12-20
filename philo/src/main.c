@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2021/12/18 17:40:05 by melperri         ###   ########.fr       */
+/*   Updated: 2021/12/20 20:11:56 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,6 @@ static int	ft_malloc_simple(void **var, size_t n, int size)
 	return (0);
 }
 
-static void	*thread_start(void *thread)
-{
-	t_thread_info	*philo;
-
-	philo = (t_thread_info *)thread;
-	if (gettimeofday(&philo->tv, NULL) < 0)
-		perror("gettimeofday failed");
-	printf("%ld %d %s\n", philo->tv.tv_sec, philo->thread_num, FORK);
-	return (philo);
-}
-
 static void	ft_get_args(char **av, t_env *g)
 {
 	if (av[1])
@@ -75,6 +64,40 @@ static void	ft_get_args(char **av, t_env *g)
 		g->nbr_of_each_philo_must_eat = ft_atoi(av[6]);
 }
 
+static void	*thread_start(void *thread)
+{
+	t_thread_info	*philo;
+	u_int64_t		time_to_ret;
+
+	philo = (t_thread_info *)thread;
+	while (philo->g->time_to_die > 0)
+	{
+		if (gettimeofday(&philo->tv, NULL) < 0)
+			perror("gettimeofday failed");
+		time_to_ret = philo->g->timestamp_at_start - ((philo->tv.tv_sec + philo->tv.tv_usec) / 1000);
+
+//		philo->tv.tv_sec = philo->tv.tv_sec % 100000000;
+		printf("%ld %d %s\n", time_to_ret, philo->thread_num, FORK);
+	}
+	return (philo);
+}
+
+static int	ft_create_forks_tab(t_thread_info **philo, t_env *g)
+{
+	int	i;
+
+	i = -1;
+	if (ft_malloc_simple((void **)&g->forks, sizeof(*g->forks), g->philo_nbr))
+		return (-1);
+	while (++i < g->philo_nbr)
+	{
+		g->forks[i].id = i + 1;
+		printf("fork = %d\n", g->forks[i].id);
+		(*philo)[i].forks = &g->forks;
+	}
+	return (0);
+}
+
 static int	ft_create_thread(t_thread_info **philo, t_env *g)
 {
 	int	tnum;
@@ -82,9 +105,12 @@ static int	ft_create_thread(t_thread_info **philo, t_env *g)
 	if (ft_malloc_simple((void **)philo, sizeof(**philo), g->philo_nbr))
 		return (-1);
 	tnum = -1;
+	if (ft_create_forks_tab(philo, g) == -1)
+		return (-1);
 	while (++tnum < g->philo_nbr)
 	{
 		(*philo)[tnum].thread_num = tnum + 1;
+		(*philo)[tnum].g = g;
 		if (pthread_create(&(*philo)[tnum].thread_id,
 				NULL, &thread_start, (void *)&(*philo)[tnum]))
 			return (-1);
@@ -103,9 +129,13 @@ int	main(int ac, char **av)
 	t_env			g;
 	t_thread_info	*philo;
 
+	philo = NULL;
 	if (ac < 5 || ac > 6)
 		return (write(1, ARG_ERROR, sizeof(ARG_ERROR)));
 	ft_get_args(av, &g);
+	if (gettimeofday(&philo->tv, NULL) < 0)
+		perror("gettimeofday failed");
+	g.timestamp_at_start = (philo->tv.tv_sec + philo->tv.tv_usec) / 1000;
 	if (ft_create_thread(&philo, &g))
 		return (-1);
 	ft_free_all(&philo);
