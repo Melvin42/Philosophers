@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2021/12/20 20:09:22 by melperri         ###   ########.fr       */
+/*   Updated: 2021/12/21 19:17:29 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <string.h>
+# include <stdbool.h>
 
 # define ARG_ERROR "Bad numbers of argument.\n"
 # define FORK "has taken a fork"
@@ -28,29 +29,38 @@
 # define THINK "is thinking"
 # define DIE "died"
 
+enum	e_available {
+	NO,
+	YES
+};
+
 typedef struct	s_forks {
-	int	id;
+	int		id;
+	bool	available;
 } t_forks;
 
 typedef struct	s_env
 {
-	int			philo_nbr;
-	int			*philo;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	int			nbr_of_each_philo_must_eat;
-	u_int64_t	timestamp_at_start;
-	t_forks		*forks;
+	int				philo_nbr;
+	int				*philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				nbr_of_each_philo_must_eat;
+	u_int64_t		time_to_ret;
+	struct timeval	tv;
+	t_forks			*forks;
 }	t_env;
 
 typedef struct	s_thread_info {
 	struct timeval	tv;
 	pthread_t		thread_id;
-	int				thread_num;
+	int				philo_id;
+	bool			is_thinking;
 	t_forks			**forks;
 	t_env			*g;
 	char			*argv_string;
+	int				last_meal;
 } t_thread_info;
 
 int	ft_atoi(const char *nptr);
