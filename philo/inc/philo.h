@@ -29,14 +29,8 @@
 # define THINK "is thinking"
 # define DIE "died"
 
-enum	e_available {
-	NO,
-	YES
-};
-
 typedef struct	s_forks {
-	int		id;
-	bool	available;
+	pthread_mutex_t	mutex;
 } t_forks;
 
 typedef struct	s_env
@@ -47,7 +41,6 @@ typedef struct	s_env
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				nbr_of_each_philo_must_eat;
-	u_int64_t		time_to_ret;
 	struct timeval	tv;
 	t_forks			*forks;
 }	t_env;
@@ -59,6 +52,7 @@ typedef struct	s_thread_info {
 	bool			is_thinking;
 	t_forks			**forks;
 	t_env			*g;
+	u_int64_t		time_to_ret;
 	char			*argv_string;
 	int				last_meal;
 } t_thread_info;

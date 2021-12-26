@@ -12,16 +12,7 @@
 
 #include "../inc/philo.h"
 
-//int pthread_create(pthread_t *thread, const pthread_attr_t *attr,
-//                          void *(*start_routine) (void *), void *arg);
-//int gettimeofday(struct timeval *tv, struct timezone *tz);
-//int pthread_join(pthread_t thread, void **retval);
 //int pthread_detach(pthread_t thread);
-//int pthread_mutex_init(pthread_mutex_t *restrict mutex,
-//      const pthread_mutexattr_t *restrict attr);
-//int pthread_mutex_destroy(pthread_mutex_t *mutex);
-
-//	pthread_detach();
 //	pthread_mutex_lock();
 //	pthread_mutex_unlock();
 static void	ft_free(void **tofree)
@@ -35,7 +26,18 @@ static void	ft_free(void **tofree)
 
 static int	ft_free_all(t_thread_info **philo)
 {
+	int	i;
+
 	ft_free((void **)philo);
+	i = -1;
+	while (++i < (*philo)->g->philo_nbr)
+	{
+		if (pthread_mutex_destroy(&((*philo)->g->forks[i]).mutex) == -1)
+		{
+			perror("Mutex destroy failed");
+			exit(0);
+		}
+	}
 	return (-1);
 }
 
@@ -73,45 +75,49 @@ static void	get_real_time(struct timeval tv_start, t_thread_info *philo)
 		perror("gettimeofday failed");
 	sec = (philo->tv.tv_sec - tv_start.tv_sec) * 1000000;
 	usec = (philo->tv.tv_usec - tv_start.tv_usec);
-	philo->g->time_to_ret = (sec + usec) / 1000;
+	philo->time_to_ret = (sec + usec) / 1000;
 }
 
 static void	ft_take_forks(t_thread_info *philo, int fork_id)
 {
 	get_real_time(philo->g->tv, philo);
 	philo->is_thinking = 1;
-	(*philo->forks)[fork_id].available = NO;
-	printf("%ld %d %s\n", philo->g->time_to_ret, philo->philo_id , FORK);
+	if (pthread_mutex_lock(&(philo->g->forks[fork_id]).mutex) == -1)//EOWNERDEAD)
+	{
+		perror("Mutex lock failed");
+		exit(1);
+	}
+	printf("%ld %d %s\n", philo->time_to_ret, philo->philo_id , FORK);
 }
 
 static void	ft_think(t_thread_info *philo)
 {
 	get_real_time(philo->g->tv, philo);
-	printf("%ld %d %s\n", philo->g->time_to_ret, philo->philo_id , THINK);
+	printf("%ld %d %s\n", philo->time_to_ret, philo->philo_id , THINK);
 }
 static void	ft_sleep(t_thread_info *philo)
 {
 	get_real_time(philo->g->tv, philo);
-	printf("%ld %d %s\n", philo->g->time_to_ret, philo->philo_id , SLEEP);
+	printf("%ld %d %s\n", philo->time_to_ret, philo->philo_id , SLEEP);
 	usleep(philo->g->time_to_sleep * 1000);
+	if (philo->philo_id == 1)
+	{
+		pthread_mutex_unlock(&(philo->g->forks[philo->g->philo_nbr - 1]).mutex);
+		pthread_mutex_unlock(&(philo->g->forks[0]).mutex);
+	}
+	else if (philo->philo_id > 1)
+	{
+		pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 1]).mutex);
+		pthread_mutex_unlock(&(philo->g->forks[philo->philo_id]).mutex);
+	}
 }
 
 static void	ft_eat(t_thread_info *philo)
 {
 	get_real_time(philo->g->tv, philo);
-	printf("%ld %d %s\n", philo->g->time_to_ret, philo->philo_id , EAT);
-	philo->last_meal = philo->g->time_to_ret;
+	printf("%ld %d %s\n", philo->time_to_ret, philo->philo_id , EAT);
+	philo->last_meal = philo->time_to_ret;
 	usleep(philo->g->time_to_eat * 1000);
-	if (philo->philo_id == 1)
-	{
-		(*philo->forks)[philo->g->philo_nbr - 1].available = YES;
-		(*philo->forks)[0].available = YES;
-	}
-	else if (philo->philo_id > 1)
-	{
-		(*philo->forks)[philo->philo_id - 1].available = YES;
-		(*philo->forks)[philo->philo_id - 2].available = YES;
-	}
 	ft_sleep(philo);
 }
 
@@ -119,20 +125,14 @@ static int	ft_can_philo_take_forks(t_thread_info *philo)
 {
 	if (philo->philo_id == 1)
 	{
-		if ((*philo->forks)[philo->g->philo_nbr - 1].available == NO
-			|| (*philo->forks)[0].available == NO)
-			return (0);
 		ft_take_forks(philo, philo->g->philo_nbr - 1);
 		ft_take_forks(philo, 0);
 		return (1);
 	}
 	else if (philo->philo_id > 1)
 	{
-		if ((*philo->forks)[philo->philo_id - 1].available == NO
-			|| (*philo->forks)[philo->philo_id - 2].available == NO)
-			return (0);
 		ft_take_forks(philo, philo->philo_id - 1);
-		ft_take_forks(philo, philo->philo_id - 2);
+		ft_take_forks(philo, philo->philo_id);
 		return (1);
 	}
 	return (0);
@@ -146,20 +146,21 @@ static void	*thread_start(void *thread)
 	while (1)
 	{
 		get_real_time(philo->g->tv, philo);
-//		printf("%d\n", ((int)philo->g->time_to_ret) - philo->last_meal);
-		if ((int)philo->g->time_to_ret - philo->last_meal > philo->g->time_to_die)
+		if ((int)philo->time_to_ret - philo->last_meal > philo->g->time_to_die)
 		{
-			printf("%ld %d %s\n", philo->g->time_to_ret, philo->philo_id , DIE);;
+			printf("%ld %d %s\n", philo->time_to_ret, philo->philo_id , DIE);;
 			exit(0);
 		}
 		if (ft_can_philo_take_forks(philo))
+		{
 			ft_eat(philo);
+		}
 		else if (philo->is_thinking == 0)
 		{
 			ft_think(philo);
 			philo->is_thinking = 1;
 		}
-		usleep(5000);
+		usleep(2000);
 	}
 	return (philo);
 }
@@ -173,9 +174,16 @@ static int	ft_create_forks_tab(t_thread_info **philo, t_env *g)
 		return (-1);
 	while (++i < g->philo_nbr)
 	{
-		g->forks[i].id = i + 1;
-		g->forks[i].available = YES;
 		(*philo)[i].forks = &g->forks;
+	}
+	i = -1;
+	while (++i < g->philo_nbr)
+	{
+		if (pthread_mutex_init(&(g->forks[i]).mutex, NULL) == -1)
+		{
+			perror("Mutex init failed");
+			exit(0);
+		}
 	}
 	return (0);
 }
@@ -201,7 +209,7 @@ static int	ft_create_thread(t_thread_info **philo, t_env *g)
 		(*philo)[tnum].g = g;
 		if (pthread_create(&(*philo)[tnum].thread_id,
 				NULL, &thread_start, (void *)&(*philo)[tnum]))
-			return (-1);
+			return (-1);;
 	}
 	tnum = -1;
 	while (++tnum < g->philo_nbr)

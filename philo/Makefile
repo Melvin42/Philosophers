@@ -20,7 +20,7 @@ LIBS =			-L/usr/include
 
 #FAST =			-Ofast
 
-SANITIZE =		-fsanitize=address
+SANITIZE =		-fsanitize=thread
 
 DEBUG =			-g3 #${SANITIZE}
 
