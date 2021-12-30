@@ -34,6 +34,8 @@ CC =			clang $(FLAGS) $(INC)
 #	ls -l | awk '{print $9}' | grep -E ".c$"| sed "s/\.c/ \\\/g" | sed '$s/\\$//g'
 
 SRC_FT =	main.c \
+			malloc_free.c \
+			philo_actions.c \
 			ft_atoi.c
 
 ## List of Utilities
