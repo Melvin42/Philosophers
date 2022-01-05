@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/18 07:04:58 by melperri          #+#    #+#             */
-/*   Updated: 2021/12/18 13:06:33 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/05 22:53:03 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	ft_isspace(int c)
 	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-static int	ft_isdigit(int c)
+int	ft_isdigit(int c)
 {
 	return (c >= '0' && c <= '9');
 }

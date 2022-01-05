@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:11:35 by melperri          #+#    #+#             */
-/*   Updated: 2021/12/30 13:15:49 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/05 19:35:03 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	ft_free_all(t_thread_info **philo)
 {
 	int	i;
 
-	ft_free((void **)philo);
 	i = -1;
 	while (++i < (*philo)->g->philo_nbr)
 	{
@@ -35,6 +34,7 @@ int	ft_free_all(t_thread_info **philo)
 			exit(0);
 		}
 	}
+	ft_free((void **)philo);
 	return (-1);
 }
 

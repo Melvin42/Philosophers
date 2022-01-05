@@ -36,8 +36,11 @@ CC =			clang $(FLAGS) $(INC)
 SRC_FT =	main.c \
 			malloc_free.c \
 			philo_actions.c \
+			ft_parsing.c \
+			ft_init.c \
 			ft_strlen.c \
 			ft_itoa.c \
+			ft_print_mutex.c \
 			ft_atoi.c
 
 ## List of Utilities
