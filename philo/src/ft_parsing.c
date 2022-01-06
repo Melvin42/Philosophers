@@ -6,11 +6,27 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:38:33 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/05 22:58:14 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/05 23:47:48 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../inc/philo.h"
+
+int	ft_zero(char *s)
+{
+	int	i;
+
+	i = -1;
+	while (s[++i])
+	{
+		if (s[i] != '0')
+			break ;
+	}
+	if (i == ft_strlen(s))
+		return (1);
+	else
+		return (0);
+}
 
 void	ft_get_args(char **av, t_env *g)
 {

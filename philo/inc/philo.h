@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/05 22:56:24 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/06 04:34:08 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ enum e_action{
 	EAT,
 	SLEEP,
 	THINK,
-	DIE
+	DIE,
+	STOP
 };
 
 enum e_status {
@@ -79,6 +80,7 @@ void	get_real_time(struct timeval tv_start, t_thread_info *philo);
 void	*thread_start(void *thread);
 
 /*	ft_parsing.c */
+int		ft_zero(char *s);
 void	ft_get_args(char **av, t_env *g);
 int		ft_check_args(int ac, char **av);
 
@@ -87,21 +89,17 @@ int		ft_create_thread(t_thread_info **philo, t_env *g);
 int		ft_program(t_thread_info **philo, t_env *g);
 
 /*	philo_actions.c */
-void	ft_take_forks(t_thread_info *philo, int fork_id);
-void	ft_think(t_thread_info *philo);
-void	ft_sleep(t_thread_info *philo);
-void	ft_eat(t_thread_info *philo);
-int		ft_can_philo_take_forks(t_thread_info *philo, int status);
-int		ft_is_philo_even(t_thread_info *philo);
+int		ft_lock_first_forks(t_thread_info *philo, int fork_id, int status);
+int		ft_lock_second_forks(t_thread_info *philo, int fork_id);
+int		ft_sleep(t_thread_info *philo);
+int		ft_eat(t_thread_info *philo);
+int		ft_can_philo_lock_forks(t_thread_info *philo, int status);
+int		ft_is_philo_even(int philo_id);
 
 /*	ft_print_mutex.c */
-int	ft_print_mutex(t_env *g, t_thread_info *philo, int action);
+int		ft_print_mutex(t_env *g, t_thread_info *philo, int action);
 
 /*	malloc_free.c */
-void	ft_free(void **tofree);
-int		ft_free_all(t_thread_info **philo);
-int		ft_malloc_simple(void **var, size_t n, int size);
-
 void	ft_free(void **tofree);
 int		ft_free_all(t_thread_info **philo);
 int		ft_malloc_simple(void **var, size_t n, int size);
