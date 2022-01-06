@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 04:34:08 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:02:43 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,11 @@ typedef struct	s_forks {
 	pthread_mutex_t	mutex;
 } t_forks;
 
+typedef struct	s_thread_info t_thread_info;
+
 typedef struct	s_env
 {
+	t_thread_info	*philo;
 	t_forks			*forks;
 	struct timeval	tv;
 	pthread_mutex_t	print_mutex;
@@ -61,7 +64,7 @@ typedef struct	s_env
 	bool			run;
 }	t_env;
 
-typedef struct	s_thread_info
+typedef	struct	s_thread_info
 {
 	t_env			*g;
 	struct timeval	tv;
@@ -71,8 +74,7 @@ typedef struct	s_thread_info
 	int				last_meal;
 	int				nb_meal_ate;
 	char			*argv_string;
-	bool			alive;
-	bool			is_thinking;
+	bool			dead;
 } t_thread_info;
 
 /*	main.c */
@@ -95,6 +97,10 @@ int		ft_sleep(t_thread_info *philo);
 int		ft_eat(t_thread_info *philo);
 int		ft_can_philo_lock_forks(t_thread_info *philo, int status);
 int		ft_is_philo_even(int philo_id);
+
+/*	ft_die.c */
+int		ft_is_one_philo_dead(t_thread_info *philo);
+int		ft_is_philo_alive(t_thread_info *philo);
 
 /*	ft_print_mutex.c */
 int		ft_print_mutex(t_env *g, t_thread_info *philo, int action);

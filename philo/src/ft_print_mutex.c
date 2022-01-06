@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 19:38:43 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 04:43:32 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:06:02 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 static void	ft_write_action(char *time, char *id, int action, t_thread_info *philo)
 {
+	if (ft_is_one_philo_dead(philo) || philo->g->run == false)
+		return ;
 	if (action == STOP)
 	{
-		philo->g->run = 1;
+		philo->dead = true;
+		philo->g->run = false;
 		return ;
 	}
 	write(1, time, ft_strlen(time));
@@ -32,7 +35,7 @@ static void	ft_write_action(char *time, char *id, int action, t_thread_info *phi
 		write(1, STR_THINK, sizeof(STR_THINK));
 	else if (action == DIE)
 	{
-		philo->g->run = 1;
+		philo->g->run = false;
 		write(1, STR_DIE, sizeof(STR_DIE));
 	}
 }
@@ -53,7 +56,7 @@ int	ft_print_mutex(t_env *g, t_thread_info *philo, int action)
 		return (-1);
 	}
 	pthread_mutex_lock(&g->print_mutex);
-	if (g->run == 0)
+	if (g->run == 1)
 		ft_write_action(time, id, action, philo);
 	pthread_mutex_unlock(&g->print_mutex);
 	ft_free((void **)&id);;

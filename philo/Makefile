@@ -40,6 +40,7 @@ SRC_FT =	main.c \
 			ft_init.c \
 			ft_strlen.c \
 			ft_itoa.c \
+			ft_die.c \
 			ft_print_mutex.c \
 			ft_atoi.c
 

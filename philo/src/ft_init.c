@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:53:00 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 03:17:56 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/06 21:02:54 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ static int	ft_init_philo(t_thread_info **philo, t_env *g)
 	int	i;
 
 	i = -1;
+	g->run = 1;
+	g->philo = *philo;
 	while (++i < g->philo_nbr)
 	{
 		(*philo)[i].philo_id = i + 1;
@@ -59,7 +61,6 @@ static int	ft_malloc_philo(t_thread_info **philo, t_env *g)
 	return (0);
 }
 
-// return ft_free_all en cas d'erreur ????
 static int	ft_join_thread(t_thread_info **philo, t_env *g)
 {
 	int	i;
