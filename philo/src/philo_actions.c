@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:16:53 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 21:10:46 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/07 17:46:28 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int		ft_sleep(t_thread_info *philo)
 
 int	ft_eat(t_thread_info *philo)
 {
-	if (ft_is_philo_alive(philo) == -1)
+	if (ft_is_philo_alive(philo) == 1)
 		return (-1);
 	if (ft_print_mutex(philo->g, philo, EAT))
 		return (-1);
@@ -54,9 +54,9 @@ int	ft_eat(t_thread_info *philo)
 
 int	ft_lock_second_forks(t_thread_info *philo, int fork_id)
 {
-	if (ft_is_philo_alive(philo) == -1)
-		return (-1);
 	pthread_mutex_lock(&philo->g->forks[fork_id].mutex);
+	if (ft_is_philo_alive(philo) == 1)
+		return (-1);
 	if (ft_print_mutex(philo->g, philo, FORK))
 		return (-1);
 	if (ft_eat(philo))
@@ -66,9 +66,9 @@ int	ft_lock_second_forks(t_thread_info *philo, int fork_id)
 
 int	ft_lock_first_forks(t_thread_info *philo, int fork_id, int status)
 {
-	if (ft_is_philo_alive(philo) == -1)
-		return (-1);
 	pthread_mutex_lock(&philo->g->forks[fork_id].mutex);
+	if (ft_is_philo_alive(philo) == 1)
+		return (-1);
 	if (ft_print_mutex(philo->g, philo, FORK))
 		return (-1);
 	if (status == ODD)

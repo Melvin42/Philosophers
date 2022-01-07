@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 21:06:38 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/07 17:47:12 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ static int	ft_actions(t_thread_info *philo)
 			if (ft_can_philo_lock_forks(philo, ODD))
 				return (-1);
 		}
+		if (ft_is_philo_alive(philo) == 1)
+			return (0) ;
 		if (ft_print_mutex(philo->g, philo, THINK))
 			return (-1);
 		usleep(500);
