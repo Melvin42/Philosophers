@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/07 17:47:12 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/08 16:58:05 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,28 +23,19 @@ void	get_real_time(struct timeval tv_start, t_thread_info *philo)
 	philo->time_to_ret = (sec + usec) / 1000;
 }
 
-static int	ft_actions(t_thread_info *philo)
+static void	ft_actions(t_thread_info *philo)
 {
 	if (philo->g->philo_nbr > 1)
 	{
 		if (!ft_is_philo_even(philo->philo_id))
 		{
 			usleep(20);
-			if (ft_can_philo_lock_forks(philo, EVEN))
-				return (-1);
+			ft_can_philo_lock_forks(philo, EVEN);
 		}
 		else
-		{
-			if (ft_can_philo_lock_forks(philo, ODD))
-				return (-1);
-		}
-		if (ft_is_philo_alive(philo) == 1)
-			return (0) ;
-		if (ft_print_mutex(philo->g, philo, THINK))
-			return (-1);
+			ft_can_philo_lock_forks(philo, ODD);
 		usleep(500);
 	}
-	return (0);
 }
 
 void	*thread_start(void *thread)
@@ -52,16 +43,10 @@ void	*thread_start(void *thread)
 	t_thread_info	*philo;
 
 	philo = (t_thread_info *)thread;
-	if (ft_print_mutex(philo->g, philo, THINK))
-		return (NULL);
-	while (philo->g->run)
+	while (philo->alive)
 	{
-		if (ft_is_philo_alive(philo) == -1)
-			return (NULL);
-		else if (ft_is_philo_alive(philo) == 1)
-			break ;
-		if (ft_actions(philo))
-			return (NULL);
+		ft_is_philo_alive(philo, THINK);
+		ft_actions(philo);
 	}
 	return (philo);
 }

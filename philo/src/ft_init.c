@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:53:00 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 21:02:54 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/08 16:28:07 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,14 @@ static int	ft_init_philo(t_thread_info **philo, t_env *g)
 	{
 		(*philo)[i].philo_id = i + 1;
 		(*philo)[i].g = g;
+		(*philo)[i].alive = true;
 		(*philo)[i].nb_meal_ate = 0;
 		if (pthread_mutex_init(&g->forks[i].mutex, NULL) == -1)
 			return (-1);
 	}
 	if (pthread_mutex_init(&g->print_mutex, NULL) == -1)
+		return (-1);
+	if (pthread_mutex_init(&g->monitor_mutex, NULL) == -1)
 		return (-1);
 	return (0);
 }

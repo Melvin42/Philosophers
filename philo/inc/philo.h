@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/06 21:02:43 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/08 16:56:30 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct	s_env
 	t_forks			*forks;
 	struct timeval	tv;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	monitor_mutex;
 	int				philo_nbr;
 	int				time_to_die;
 	int				time_to_eat;
@@ -74,7 +75,7 @@ typedef	struct	s_thread_info
 	int				last_meal;
 	int				nb_meal_ate;
 	char			*argv_string;
-	bool			dead;
+	bool			alive;
 } t_thread_info;
 
 /*	main.c */
@@ -91,19 +92,19 @@ int		ft_create_thread(t_thread_info **philo, t_env *g);
 int		ft_program(t_thread_info **philo, t_env *g);
 
 /*	philo_actions.c */
-int		ft_lock_first_forks(t_thread_info *philo, int fork_id, int status);
-int		ft_lock_second_forks(t_thread_info *philo, int fork_id);
-int		ft_sleep(t_thread_info *philo);
-int		ft_eat(t_thread_info *philo);
-int		ft_can_philo_lock_forks(t_thread_info *philo, int status);
+void	ft_lock_first_forks(t_thread_info *philo, int fork_id, int status);
+void	ft_lock_second_forks(t_thread_info *philo, int fork_id);
+void	ft_sleep(t_thread_info *philo);
+void	ft_eat(t_thread_info *philo);
+void	ft_can_philo_lock_forks(t_thread_info *philo, int status);
 int		ft_is_philo_even(int philo_id);
 
 /*	ft_die.c */
-int		ft_is_one_philo_dead(t_thread_info *philo);
-int		ft_is_philo_alive(t_thread_info *philo);
+void	ft_is_one_philo_dead(t_thread_info *philo);
+void	ft_is_philo_alive(t_thread_info *philo, int status);
 
 /*	ft_print_mutex.c */
-int		ft_print_mutex(t_env *g, t_thread_info *philo, int action);
+void	ft_print_mutex(t_env *g, t_thread_info *philo, int action);
 
 /*	malloc_free.c */
 void	ft_free(void **tofree);
