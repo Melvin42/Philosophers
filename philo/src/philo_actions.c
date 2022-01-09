@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:16:53 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/08 17:08:33 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/09 18:00:22 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,17 @@ void	ft_sleep(t_thread_info *philo)
 		}
 	}
 	ft_is_philo_alive(philo, SLEEP);
-	usleep(philo->g->time_to_sleep);
+	ft_usleep(philo, philo->g->time_to_sleep);
 }
 
 void	ft_eat(t_thread_info *philo)
 {
 	ft_is_philo_alive(philo, EAT);
-	usleep(philo->g->time_to_eat);
+	pthread_mutex_lock(&philo->g->last_meal_mutex);
 	philo->last_meal = philo->time_to_ret;
 	philo->nb_meal_ate++;
+	pthread_mutex_unlock(&philo->g->last_meal_mutex);
+	ft_usleep(philo, philo->g->time_to_eat);
 	ft_sleep(philo);
 }
 

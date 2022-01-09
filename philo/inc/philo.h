@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/08 16:56:30 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/09 17:31:07 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,10 @@ typedef struct	s_env
 	t_thread_info	*philo;
 	t_forks			*forks;
 	struct timeval	tv;
-	pthread_mutex_t	print_mutex;
-	pthread_mutex_t	monitor_mutex;
+	struct timeval	monitor_time;
+	pthread_t		monitor;
+	pthread_mutex_t	run_mutex;
+	pthread_mutex_t	last_meal_mutex;
 	int				philo_nbr;
 	int				time_to_die;
 	int				time_to_eat;
@@ -75,7 +77,7 @@ typedef	struct	s_thread_info
 	int				last_meal;
 	int				nb_meal_ate;
 	char			*argv_string;
-	bool			alive;
+	bool			alive;	
 } t_thread_info;
 
 /*	main.c */
@@ -100,11 +102,14 @@ void	ft_can_philo_lock_forks(t_thread_info *philo, int status);
 int		ft_is_philo_even(int philo_id);
 
 /*	ft_die.c */
-void	ft_is_one_philo_dead(t_thread_info *philo);
+void	*monitor_routine(void	*thread);
 void	ft_is_philo_alive(t_thread_info *philo, int status);
 
 /*	ft_print_mutex.c */
 void	ft_print_mutex(t_env *g, t_thread_info *philo, int action);
+
+/*	ft_usleep.c */
+void	ft_usleep(t_thread_info *philo, int time);
 
 /*	malloc_free.c */
 void	ft_free(void **tofree);
@@ -116,5 +121,6 @@ int		ft_strlen(char *s);
 int		ft_isdigit(int c);
 int		ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
+int		ft_strcmp(char *s1, char *s2);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 19:38:43 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/08 17:30:08 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/09 15:58:14 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,8 @@ static void	ft_write_action(int action, t_thread_info *philo)
 
 void	ft_print_mutex(t_env *g, t_thread_info *philo, int action)
 {
-	pthread_mutex_lock(&g->print_mutex);
-//	ft_is_one_philo_dead(philo);
+	pthread_mutex_lock(&g->run_mutex);
 	get_real_time(philo->g->tv, philo);
 	ft_write_action(action, philo);
-	pthread_mutex_unlock(&g->print_mutex);
+	pthread_mutex_unlock(&g->run_mutex);
 }
