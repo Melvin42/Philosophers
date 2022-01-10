@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/09 16:19:52 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/10 16:42:07 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,19 @@ void	*thread_start(void *thread)
 	t_thread_info	*philo;
 
 	philo = (t_thread_info *)thread;
-	while (philo->alive)
+	if (philo->g->philo_nbr == 1)
 	{
-		ft_is_philo_alive(philo, THINK);
-		ft_actions(philo);
+		ft_print_mutex(philo->g, philo, THINK);
+		ft_usleep(philo, philo->g->time_to_die * 1000000);
+//		ft_print_mutex(philo->g, philo, DIE);
+	}
+	else
+	{
+		while (philo->alive)
+		{
+			ft_is_philo_alive(philo, THINK);
+			ft_actions(philo);
+		}
 	}
 	return (philo);
 }

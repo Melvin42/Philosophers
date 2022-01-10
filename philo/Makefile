@@ -41,7 +41,6 @@ SRC_FT =	main.c \
 			ft_strlen.c \
 			ft_strcmp.c \
 			ft_usleep.c \
-			ft_itoa.c \
 			ft_die.c \
 			ft_print_mutex.c \
 			ft_atoi.c

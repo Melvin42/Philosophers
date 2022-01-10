@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 18:10:59 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/09 18:00:29 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/10 14:32:53 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ void	*monitor_routine(void	*thread)
 		time_to_ret = (sec + usec) / 1000;
 		if ((int)time_to_ret - g->philo[i].last_meal >= g->time_to_die)
 		{
-			pthread_mutex_lock(&g->run_mutex);
+			pthread_mutex_unlock(&g->last_meal_mutex);
 			ft_print_mutex(g, &g->philo[i], DIE);
 			g->philo[i].alive = false;
-			pthread_mutex_unlock(&g->run_mutex);
+			break ;
 		}
 		pthread_mutex_unlock(&g->last_meal_mutex);
 		if (i == g->philo_nbr - 1)
@@ -50,17 +50,23 @@ void	*monitor_routine(void	*thread)
 //philo 5 210 100 200 4
 void	ft_is_philo_alive(t_thread_info *philo, int status)
 {
+	pthread_mutex_lock(&philo->g->last_meal_mutex);
 	get_real_time(philo->g->tv, philo);
 	if ((int)philo->time_to_ret - philo->last_meal >= philo->g->time_to_die)
 	{
+		pthread_mutex_unlock(&philo->g->last_meal_mutex);
 		ft_print_mutex(philo->g, philo, DIE);
 		philo->alive = false;
 	}
 	else if (philo->nb_meal_ate >= philo->g->nb_max_meal)
 	{
+		pthread_mutex_unlock(&philo->g->last_meal_mutex);
 		ft_print_mutex(philo->g, philo, STOP);
 		philo->alive = false;
 	}
 	else
+	{
+		pthread_mutex_unlock(&philo->g->last_meal_mutex);
 		ft_print_mutex(philo->g, philo, status);
+	}
 }

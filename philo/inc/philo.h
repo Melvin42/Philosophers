@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/09 17:31:07 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/10 12:29:59 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ int		ft_malloc_simple(void **var, size_t n, int size);
 int		ft_strlen(char *s);
 int		ft_isdigit(int c);
 int		ft_atoi(const char *nptr);
-char	*ft_itoa(int n);
 int		ft_strcmp(char *s1, char *s2);
 
 #endif
