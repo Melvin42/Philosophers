@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/10 12:29:59 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/11 19:44:24 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ typedef struct	s_env
 	struct timeval	monitor_time;
 	pthread_t		monitor;
 	pthread_mutex_t	run_mutex;
-	pthread_mutex_t	last_meal_mutex;
 	int				philo_nbr;
 	int				time_to_die;
 	int				time_to_eat;
@@ -72,6 +71,7 @@ typedef	struct	s_thread_info
 	t_env			*g;
 	struct timeval	tv;
 	pthread_t		thread_id;
+	pthread_mutex_t	last_meal_mutex;
 	u_int64_t		time_to_ret;
 	int				philo_id;
 	int				last_meal;
@@ -94,6 +94,7 @@ int		ft_create_thread(t_thread_info **philo, t_env *g);
 int		ft_program(t_thread_info **philo, t_env *g);
 
 /*	philo_actions.c */
+void	ft_unlock(t_thread_info *philo);
 void	ft_lock_first_forks(t_thread_info *philo, int fork_id, int status);
 void	ft_lock_second_forks(t_thread_info *philo, int fork_id);
 void	ft_sleep(t_thread_info *philo);

@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:53:00 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/10 16:34:10 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/12 15:57:39 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	ft_init_philo(t_thread_info **philo, t_env *g)
 	int	i;
 
 	i = -1;
-	g->run = 1;
+	g->run = true;
 	g->philo = *philo;
 	while (++i < g->philo_nbr)
 	{
@@ -27,10 +27,10 @@ static int	ft_init_philo(t_thread_info **philo, t_env *g)
 		(*philo)[i].nb_meal_ate = 0;
 		if (pthread_mutex_init(&g->forks[i].mutex, NULL) == -1)
 			return (-1);
+		if (pthread_mutex_init(&(*philo)[i].last_meal_mutex, NULL) == -1)
+			return (-1);
 	}
 	if (pthread_mutex_init(&g->run_mutex, NULL) == -1)
-		return (-1);
-	if (pthread_mutex_init(&g->last_meal_mutex, NULL) == -1)
 		return (-1);
 	return (0);
 }
@@ -47,9 +47,9 @@ int	ft_create_thread(t_thread_info **philo, t_env *g)
 			return (-1);
 		usleep(20);
 	}
-//	if (pthread_create(&(*g).monitor,
-//			NULL, &monitor_routine, &g))
-//		return (-1);
+	if (pthread_create(&g->monitor,
+			NULL, &monitor_routine, g))
+		return (-1);
 	return (0);
 }
 
@@ -72,6 +72,7 @@ static int	ft_join_thread(t_thread_info **philo, t_env *g)
 	int	i;
 
 	i = -1;
+	(void)philo;
 	while (++i < g->philo_nbr)
 	{
 		if (pthread_join((*philo)[i].thread_id, NULL))

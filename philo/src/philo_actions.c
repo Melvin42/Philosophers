@@ -6,13 +6,13 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:16:53 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/10 14:32:30 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/12 16:57:40 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-void	ft_sleep(t_thread_info *philo)
+void	ft_unlock(t_thread_info *philo)
 {
 	if (philo->philo_id == 1)
 	{
@@ -21,28 +21,25 @@ void	ft_sleep(t_thread_info *philo)
 	}
 	else if (philo->philo_id > 1)
 	{
-		if (ft_is_philo_even(philo->philo_id))
-		{
-			pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 2]).mutex);
-			pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 1]).mutex);
-		}
-		else
-		{
-			pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 1]).mutex);
-			pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 2]).mutex);
-		}
+		pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 2]).mutex);
+		pthread_mutex_unlock(&(philo->g->forks[philo->philo_id - 1]).mutex);
 	}
+}
+
+void	ft_sleep(t_thread_info *philo)
+{
 	ft_is_philo_alive(philo, SLEEP);
+	ft_unlock(philo);
 	ft_usleep(philo, philo->g->time_to_sleep);
 }
 
 void	ft_eat(t_thread_info *philo)
 {
 	ft_is_philo_alive(philo, EAT);
-	pthread_mutex_lock(&philo->g->last_meal_mutex);
+	pthread_mutex_lock(&philo->last_meal_mutex);
 	philo->last_meal = philo->time_to_ret;
 	philo->nb_meal_ate++;
-	pthread_mutex_unlock(&philo->g->last_meal_mutex);
+	pthread_mutex_unlock(&philo->last_meal_mutex);
 	ft_usleep(philo, philo->g->time_to_eat);
 	ft_sleep(philo);
 }
@@ -79,7 +76,9 @@ void	ft_can_philo_lock_forks(t_thread_info *philo, int status)
 			ft_lock_first_forks(philo, philo->philo_id - 2, status);
 	}
 	else
+	{
 		ft_lock_first_forks(philo, philo->philo_id - 1, status);
+	}
 }
 
 int	ft_is_philo_even(int philo_id)

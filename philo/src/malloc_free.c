@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:11:35 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/09 16:56:18 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:38:27 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,11 @@ int	ft_free_all(t_thread_info **philo)
 
 	i = -1;
 	while (++i < (*philo)->g->philo_nbr)
+	{
 		pthread_mutex_destroy(&((*philo)->g->forks[i]).mutex);
+		pthread_mutex_destroy(&(*philo)[i].last_meal_mutex);
+	}
 	pthread_mutex_destroy(&(*philo)->g->run_mutex);
-	pthread_mutex_destroy(&(*philo)->g->last_meal_mutex);
 	ft_free((void **)&(*philo)->g->forks);
 	ft_free((void **)philo);
 	return (-1);

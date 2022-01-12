@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/10 16:42:07 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/12 16:53:59 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,13 @@ static void	ft_actions(t_thread_info *philo)
 	{
 		if (!ft_is_philo_even(philo->philo_id))
 		{
-			usleep(20);
-			ft_can_philo_lock_forks(philo, EVEN);
+			usleep(100);
+			ft_can_philo_lock_forks(philo, ODD);
 		}
 		else
+		{
 			ft_can_philo_lock_forks(philo, ODD);
-		usleep(500);
+		}
 	}
 }
 
@@ -46,8 +47,7 @@ void	*thread_start(void *thread)
 	if (philo->g->philo_nbr == 1)
 	{
 		ft_print_mutex(philo->g, philo, THINK);
-		ft_usleep(philo, philo->g->time_to_die * 1000000);
-//		ft_print_mutex(philo->g, philo, DIE);
+		ft_usleep(philo, philo->g->time_to_die);
 	}
 	else
 	{

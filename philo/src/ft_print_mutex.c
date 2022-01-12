@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 19:38:43 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/10 16:38:22 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/12 16:21:49 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 static void	ft_write_action(int action, t_thread_info *philo)
 {
-	if (philo->g->run == false || philo->alive == false)
+	if (philo->g->run == false)// || philo->alive == false)
+	{
+		philo->alive = false;
 		return ;
+	}
 	if (action == FORK)
 		printf("%lu %d %s", philo->time_to_ret, philo->philo_id, STR_FORK);
 	else if (action == EAT)
