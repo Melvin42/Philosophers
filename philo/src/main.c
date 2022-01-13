@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:16:58 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/12 16:53:59 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:50:12 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,24 @@ static void	ft_actions(t_thread_info *philo)
 		if (!ft_is_philo_even(philo->philo_id))
 		{
 			usleep(100);
-			ft_can_philo_lock_forks(philo, ODD);
+			ft_can_philo_lock_forks(philo, EVEN);
 		}
 		else
 		{
 			ft_can_philo_lock_forks(philo, ODD);
 		}
+	}
+}
+
+static void	ft_think(t_thread_info *philo)
+{
+	if (philo->g->philo_nbr % 2 == 0)
+		ft_is_philo_alive(philo, THINK);
+	else
+	{
+		ft_is_philo_alive(philo, THINK);
+		if (ft_is_philo_even(philo->philo_id))
+			usleep(5000);
 	}
 }
 
@@ -48,15 +60,18 @@ void	*thread_start(void *thread)
 	{
 		ft_print_mutex(philo->g, philo, THINK);
 		ft_usleep(philo, philo->g->time_to_die);
+		return (philo);
 	}
-	else
+	while (1)
 	{
-		while (philo->alive)
-		{
-			ft_is_philo_alive(philo, THINK);
-			ft_actions(philo);
-		}
+		pthread_mutex_lock(&philo->alive_mutex);
+		if (philo->alive == false)
+			break ;
+		pthread_mutex_unlock(&philo->alive_mutex);
+		ft_actions(philo);
+		ft_think(philo);
 	}
+	pthread_mutex_unlock(&philo->alive_mutex);
 	return (philo);
 }
 

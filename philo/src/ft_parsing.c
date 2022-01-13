@@ -6,11 +6,11 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:38:33 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/05 23:47:48 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:35:16 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../inc/philo.h"
+#include "../inc/philo.h"
 
 int	ft_zero(char *s)
 {

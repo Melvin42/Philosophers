@@ -6,17 +6,19 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 19:38:43 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/12 16:21:49 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:35:00 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../inc/philo.h"
+#include "../inc/philo.h"
 
 static void	ft_write_action(int action, t_thread_info *philo)
 {
-	if (philo->g->run == false)// || philo->alive == false)
+	if (philo->g->run == false)
 	{
+		pthread_mutex_lock(&philo->alive_mutex);
 		philo->alive = false;
+		pthread_mutex_unlock(&philo->alive_mutex);
 		return ;
 	}
 	if (action == FORK)

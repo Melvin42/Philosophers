@@ -6,11 +6,11 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:53:00 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/12 15:57:39 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:42:05 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../inc/philo.h"
+#include "../inc/philo.h"
 
 static int	ft_init_philo(t_thread_info **philo, t_env *g)
 {
@@ -29,6 +29,8 @@ static int	ft_init_philo(t_thread_info **philo, t_env *g)
 			return (-1);
 		if (pthread_mutex_init(&(*philo)[i].last_meal_mutex, NULL) == -1)
 			return (-1);
+		if (pthread_mutex_init(&(*philo)[i].alive_mutex, NULL) == -1)
+			return (-1);
 	}
 	if (pthread_mutex_init(&g->run_mutex, NULL) == -1)
 		return (-1);
@@ -43,7 +45,7 @@ int	ft_create_thread(t_thread_info **philo, t_env *g)
 	while (++i < g->philo_nbr)
 	{
 		if (pthread_create(&(*philo)[i].thread_id,
-				NULL, &thread_start, &(*philo)[i]))
+			NULL, &thread_start, &(*philo)[i]))
 			return (-1);
 		usleep(20);
 	}
@@ -72,7 +74,6 @@ static int	ft_join_thread(t_thread_info **philo, t_env *g)
 	int	i;
 
 	i = -1;
-	(void)philo;
 	while (++i < g->philo_nbr)
 	{
 		if (pthread_join((*philo)[i].thread_id, NULL))

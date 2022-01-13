@@ -43,6 +43,8 @@ SRC_FT =	main.c \
 			ft_usleep.c \
 			ft_die.c \
 			ft_print_mutex.c \
+			ft_is_philo_even.c \
+			ft_eat_sleep.c \
 			ft_atoi.c
 
 ## List of Utilities

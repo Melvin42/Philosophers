@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/11 19:44:24 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/13 19:54:43 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,13 @@ enum e_status {
 	EVEN
 };
 
-typedef struct	s_forks {
+typedef struct s_forks {
 	pthread_mutex_t	mutex;
-} t_forks;
+}	t_forks;
 
-typedef struct	s_thread_info t_thread_info;
+typedef struct s_thread_info	t_thread_info;
 
-typedef struct	s_env
-{
+typedef struct s_env {
 	t_thread_info	*philo;
 	t_forks			*forks;
 	struct timeval	tv;
@@ -66,19 +65,19 @@ typedef struct	s_env
 	bool			run;
 }	t_env;
 
-typedef	struct	s_thread_info
-{
+typedef struct s_thread_info {
 	t_env			*g;
 	struct timeval	tv;
 	pthread_t		thread_id;
 	pthread_mutex_t	last_meal_mutex;
+	pthread_mutex_t	alive_mutex;
 	u_int64_t		time_to_ret;
 	int				philo_id;
 	int				last_meal;
 	int				nb_meal_ate;
 	char			*argv_string;
 	bool			alive;	
-} t_thread_info;
+}	t_thread_info;
 
 /*	main.c */
 void	get_real_time(struct timeval tv_start, t_thread_info *philo);
@@ -122,5 +121,12 @@ int		ft_strlen(char *s);
 int		ft_isdigit(int c);
 int		ft_atoi(const char *nptr);
 int		ft_strcmp(char *s1, char *s2);
+
+/*	ft_is_philo_even.c */
+int		ft_is_philo_even(int philo_id);
+
+/*	ft_eat_sleep.c */
+void	ft_eat(t_thread_info *philo);
+void	ft_sleep(t_thread_info *philo);
 
 #endif

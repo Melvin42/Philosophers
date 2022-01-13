@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_is_philo_even.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/05 17:59:25 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/13 19:34:46 by melperri         ###   ########.fr       */
+/*   Created: 2022/01/13 19:51:37 by melperri          #+#    #+#             */
+/*   Updated: 2022/01/13 19:51:58 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/philo.h"
 
-int	ft_strlen(char *s)
+int	ft_is_philo_even(int philo_id)
 {
-	int	i;
-
-	if (!s)
-		return (0);
-	i = -1;
-	while (s[++i])
-		;
-	return (i);
+	return (philo_id % 2);
 }
