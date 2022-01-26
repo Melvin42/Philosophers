@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/09 15:58:40 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/13 19:41:21 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/26 23:49:11 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,8 @@
 
 void	ft_usleep(t_thread_info *philo, int time_to_wait)
 {
-	int			i;
 	u_int64_t	old_time;
 
-	i = -1;
 	get_real_time(philo->g->tv, philo);
 	old_time = philo->time_to_ret;
 	time_to_wait /= 1000;
@@ -25,15 +23,14 @@ void	ft_usleep(t_thread_info *philo, int time_to_wait)
 	{
 		pthread_mutex_lock(&philo->last_meal_mutex);
 		get_real_time(philo->g->tv, philo);
-		if ((int)philo->time_to_ret - philo->last_meal >= philo->g->time_to_die)
+		if ((int)philo->time_to_ret - philo->last_meal > philo->g->time_to_die)
 		{
 			pthread_mutex_unlock(&philo->last_meal_mutex);
-			pthread_mutex_lock(&philo->alive_mutex);
-			philo->alive = false;
-			pthread_mutex_unlock(&philo->alive_mutex);
+			ft_set_alive_mutex_false(philo);
+			ft_print_mutex(philo->g, philo, DIE);
 			break ;
 		}
 		pthread_mutex_unlock(&philo->last_meal_mutex);
-		usleep(1000);
+		usleep(100);
 	}
 }

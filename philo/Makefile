@@ -37,6 +37,7 @@ SRC_FT =	main.c \
 			malloc_free.c \
 			philo_actions.c \
 			ft_parsing.c \
+			ft_check_int_max.c \
 			ft_init.c \
 			ft_strlen.c \
 			ft_strcmp.c \

@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 18:10:59 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/13 19:46:45 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/27 00:07:25 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,19 @@ static u_int64_t	get_time_routine(t_env *g)
 	sec = (g->monitor_time.tv_sec - g->tv.tv_sec) * 1000000;
 	usec = (g->monitor_time.tv_usec - g->tv.tv_usec);
 	return ((sec + usec) / 1000);
+}
+
+static void	*monitor_checking_die(t_env *g, int i)
+{
+	pthread_mutex_lock(&g->philo[i].alive_mutex);
+	if (g->philo[i].alive == false)
+	{
+		pthread_mutex_unlock(&g->philo[i].alive_mutex);
+		return (&g->monitor);
+	}
+	pthread_mutex_unlock(&g->philo[i].alive_mutex);
+	ft_print_mutex(g, &g->philo[i], DIE);
+	return (&g->monitor);
 }
 
 void	*monitor_routine(void	*thread)
@@ -39,8 +52,7 @@ void	*monitor_routine(void	*thread)
 		if ((int)time_to_ret - g->philo[i].last_meal > g->time_to_die)
 		{
 			pthread_mutex_unlock(&g->philo[i].last_meal_mutex);
-			ft_print_mutex(g, &g->philo[i], DIE);
-			return (&g->monitor);
+			return (monitor_checking_die(g, i));
 		}
 		pthread_mutex_unlock(&g->philo[i].last_meal_mutex);
 		if (i == g->philo_nbr - 1)
@@ -60,17 +72,12 @@ void	ft_is_philo_alive(t_thread_info *philo, int status)
 	{
 		pthread_mutex_unlock(&philo->last_meal_mutex);
 		ft_print_mutex(philo->g, philo, DIE);
-		pthread_mutex_lock(&philo->alive_mutex);
-		philo->alive = false;
-		pthread_mutex_unlock(&philo->alive_mutex);
+		ft_set_alive_mutex_false(philo);
 	}
 	else if (philo->nb_meal_ate >= philo->g->nb_max_meal)
 	{
 		pthread_mutex_unlock(&philo->last_meal_mutex);
 		ft_print_mutex(philo->g, philo, STOP);
-		pthread_mutex_lock(&philo->alive_mutex);
-		philo->alive = false;
-		pthread_mutex_unlock(&philo->alive_mutex);
 	}
 	else
 	{

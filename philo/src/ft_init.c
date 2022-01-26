@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/05 21:53:00 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/13 19:42:05 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/26 23:41:40 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ft_create_thread(t_thread_info **philo, t_env *g)
 		if (pthread_create(&(*philo)[i].thread_id,
 			NULL, &thread_start, &(*philo)[i]))
 			return (-1);
-		usleep(20);
+		usleep(10);
 	}
 	if (pthread_create(&g->monitor,
 			NULL, &monitor_routine, g))

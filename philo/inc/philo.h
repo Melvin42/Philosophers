@@ -6,7 +6,7 @@
 /*   By: melperri <melperri@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/15 00:17:55 by melperri          #+#    #+#             */
-/*   Updated: 2022/01/13 19:54:43 by melperri         ###   ########.fr       */
+/*   Updated: 2022/01/27 00:02:12 by melperri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,9 @@ int		ft_zero(char *s);
 void	ft_get_args(char **av, t_env *g);
 int		ft_check_args(int ac, char **av);
 
+/*	ft_check_int_max */
+int		ft_check_int_max(char **av);
+
 /*	ft_init.c */
 int		ft_create_thread(t_thread_info **philo, t_env *g);
 int		ft_program(t_thread_info **philo, t_env *g);
@@ -106,6 +109,7 @@ void	*monitor_routine(void	*thread);
 void	ft_is_philo_alive(t_thread_info *philo, int status);
 
 /*	ft_print_mutex.c */
+void	ft_set_alive_mutex_false(t_thread_info *philo);
 void	ft_print_mutex(t_env *g, t_thread_info *philo, int action);
 
 /*	ft_usleep.c */
